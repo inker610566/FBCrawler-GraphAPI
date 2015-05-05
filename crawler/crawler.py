@@ -26,7 +26,8 @@ def xrange(start, end, step):
         start += step
 
 def Curl(url, filename):
-    exitCode = os.system("curl \"%s\" > %s"%(url, filename))
+    print "curl \"%s\" > %s"%(url, filename)
+    exitCode = os.system("..\\curl --insecure \"%s\" > %s"%(url, filename))
     assert exitCode == 0
 
 def CrawlGroupDate(group_id, date):
@@ -39,12 +40,11 @@ def CrawlGroupDate(group_id, date):
         access_token
     )
     
-    TMP_JSON_FILE = "log/tmp.json"
+    TMP_JSON_FILE = "log\\tmp.json"
 
     Datas = []
 
     while True:
-        print query
         Curl(query, TMP_JSON_FILE)
         fp = open(TMP_JSON_FILE, "r")
         curjson = json.load(fp)
@@ -76,9 +76,11 @@ def CrawlGroup(group_id, group_name):
 
     for tarDate in xrange(getLastCrawlDate(), Date.today(), Timedelta(days=1)):
         # crawl tarDate
-        fp = open(tarDate.strftime("%Y-%m-%d")+".json", "w")
-        fp.write(json.dumps(CrawlGroupDate(group_id, tarDate)))
-        fp.close()
+	posts = CrawlGroupDate(group_id, tarDate)
+	if posts:
+	    fp = open(tarDate.strftime("%Y-%m-%d")+".json", "w")
+	    fp.write(json.dumps(posts))
+	    fp.close()
     
     os.chdir("..")
 
