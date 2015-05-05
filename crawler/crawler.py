@@ -26,9 +26,29 @@ def xrange(start, end, step):
         start += step
 
 def Curl(url, filename):
-    print "curl \"%s\" > %s"%(url, filename)
+    print "..\\curl --insecure \"%s\" > %s"%(url, filename)
     exitCode = os.system("..\\curl --insecure \"%s\" > %s"%(url, filename))
     assert exitCode == 0
+
+def Jsonfile2Object(filename):
+    fp = open(filename, "r")
+    obj = json.load(fp)
+    fp.close()
+    return obj
+
+def Url2Object(url):
+    TMP_JSON_FILE = "log\\tmp.json"
+
+    Curl(url, TMP_JSON_FILE)
+    return Jsonfile2Object(TMP_JSON_FILE)
+
+def has_path(json_obj, path):
+    for node in path:
+	if json_obj.has_key(node):
+	   json_obj = json_obj[node]
+	else:
+	   return False
+    return True
 
 def CrawlGroupDate(group_id, date):
 
@@ -40,15 +60,28 @@ def CrawlGroupDate(group_id, date):
         access_token
     )
     
-    TMP_JSON_FILE = "log\\tmp.json"
-
     Datas = []
 
     while True:
-        Curl(query, TMP_JSON_FILE)
-        fp = open(TMP_JSON_FILE, "r")
-        curjson = json.load(fp)
-        fp.close()
+	# read json
+	curjson = Url2Object(query)
+
+	# expand comments
+	for post in curjson["data"]:
+	    if has_path(post, ("comments", "paging", "next")):
+		comments = post["comments"]["data"]
+		next_query = post["comments"]["paging"]["next"]
+
+		while True:
+		    comment = Url2Object(next_query)
+		    if not has_path(comment, ("data",)) or len(comment["data"]) == 0:
+			break
+		    comments.extend(comment["data"])
+		    if not has_path(comment, ("paging", "next")):
+			break
+		    next_query = comment["paging"]["next"]
+		    
+	
         if curjson["data"]:
             Datas.extend(curjson["data"])
         else:
@@ -74,7 +107,7 @@ def CrawlGroup(group_id, group_name):
     except OSError:
 	pass
 
-    for tarDate in xrange(getLastCrawlDate(), Date.today(), Timedelta(days=1)):
+    for tarDate in xrange(getLastCrawlDate(), Date.today() + Timedelta(days=1), Timedelta(days=1)):
         # crawl tarDate
 	posts = CrawlGroupDate(group_id, tarDate)
 	if posts:
