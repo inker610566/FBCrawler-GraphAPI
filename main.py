@@ -43,21 +43,21 @@ if __name__ == "__main__":
     crawler.CrawlGroup("334550676706573", "37civicpower")
     crawler.CrawlGroup("1731561496982826", "38resistance")
     # 39 parent concern https://www.facebook.com/groups/pcgne
-    # 40 https://www.facebook.com/PttTW
-    # 41 https://www.facebook.com/stormmedia
-    # 42 https://www.facebook.com/taiwanenglishclass
+    crawler.CrawlGroup("263222741363", "40PttTW")
+    crawler.CrawlGroup("186758878172497", "41stormmedia")
+    crawler.CrawlGroup("142477519240030", "42taiwanenglishclass")
     # 43
-    # 44 https://www.facebook.com/le22218861
+    crawler.CrawlGroup("672575109453573", "44le22218861")
     crawler.CrawlGroup("780188175346334", "45LearningGroup")
     # 46 ????
-    # 47 Party
+    crawler.CrawlGroup("247170855413829", "47Party")
     crawler.CrawlGroup("367417913397654", "48FreeReview")
     crawler.CrawlGroup("240556774862", "49ArduinoEdu")
     crawler.CrawlGroup("453959164718072", "50emathproblem")
     # 51 ?????
     # 52 ?????
-    # 53 https://www.facebook.com/voicetubetw
-    # 54 https://www.facebook.com/test0099
+    crawler.CrawlGroup("515316421821497", "53voicetubetw")
+    crawler.CrawlGroup("245182845518135", "54test0099")
     # 55 ??????
     
     

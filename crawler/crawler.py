@@ -53,7 +53,7 @@ def has_path(json_obj, path):
 def CrawlGroupDate(group_id, date):
 
     # first query
-    query = (Query_base + "/%s/feed?since=%s&until=%s&access_token=%s") % (
+    query = (Query_base + "/%s/feed?since=%s&until=%s&access_token=%s&fields=from,to,created_time,updated_time,likes.limit(0).summary(true),comments,link,name,picture,message") % (
         group_id,
         date.strftime("%Y-%m-%d"),
         (date + Timedelta(days=1)).strftime("%Y-%m-%d"),
